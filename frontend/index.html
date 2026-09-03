@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💰 مدير فلوسي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <h1>💰 مدير فلوسي</h1>
+      <div class="header-actions">
+        <button class="btn btn-icon" id="export-json" title="تصدير JSON">📥</button>
+        <button class="btn btn-icon" id="export-csv" title="تصدير CSV">📊</button>
+        <button class="btn btn-icon" id="categories-btn" title="إدارة الفئات">🏷️</button>
+        <button class="btn btn-icon" id="budgets-btn" title="إدارة الميزانيات">💲</button>
+        <button class="btn btn-icon btn-secondary" id="logout-btn" title="تسجيل الخروج">🚪</button>
+      </div>
+    </header>
+    
+    <main class="app-main">
+      <section class="summary-section" id="summary-cards">
+        <div class="summary-card income">
+          <span class="card-title">إجمالي الدخل</span>
+          <span id="total-income" class="card-value positive">0</span>
+        </div>
+        <div class="summary-card expense">
+          <span class="card-title">إجمالي المصروف</span>
+          <span id="total-expense" class="card-value negative">0</span>
+        </div>
+        <div class="summary-card balance">
+          <span class="card-title">الرصيد الحالي</span>
+          <span id="balance" class="card-value">0</span>
+        </div>
+      </section>
+      
+      <section class="charts-section">
+        <div class="chart-container">
+          <h3>توزيع المصروفات</h3>
+          <canvas id="expense-chart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>الدخل vs المصروف (آخر 6 شهور)</h3>
+          <canvas id="income-expense-chart"></canvas>
+        </div>
+      </section>
+      
+      <section class="form-section">
+        <form id="transaction-form" class="transaction-form">
+          <h3 id="form-title">إضافة عملية</h3>
+          <input type="hidden" id="editing-id">
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="txn-type">النوع</label>
+              <select id="txn-type" required>
+                <option value="income">دخل</option>
+                <option value="expense">مصروف</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="txn-account">الحساب</label>
+              <select id="txn-account" required>
+                <option value="wallet">محفظة</option>
+                <option value="instapay">InstaPay</option>
+                <option value="visa">فيزا</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="txn-amount">المبلغ</label>
+              <input type="number" id="txn-amount" step="0.01" min="0.01" placeholder="0.00" required>
+            </div>
+            <div class="form-group">
+              <label for="txn-date">التاريخ</label>
+              <input type="date" id="txn-date" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="txn-category">الفئة</label>
+            <select id="txn-category" required></select>
+          </div>
+          
+          <div class="form-group">
+            <label for="txn-note">ملاحظة</label>
+            <input type="text" id="txn-note" placeholder="ملاحظة اختيارية">
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submit-btn">💾 حفظ</button>
+            <button type="button" class="btn btn-secondary" id="cancel-btn">✖ إلغاء</button>
+          </div>
+        </form>
+      </section>
+      
+      <section class="filter-section">
+        <div class="filter-bar" id="filter-bar">
+          <div class="filter-group">
+            <label>الشهر</label>
+            <select id="filter-month"><option value="all">كل الشهور</option></select>
+          </div>
+          <div class="filter-group">
+            <label>الحساب</label>
+            <select id="filter-account"><option value="all">كل الحسابات</option></select>
+          </div>
+          <div class="filter-group">
+            <label>الفئة</label>
+            <select id="filter-category"><option value="all">كل الفئات</option></select>
+          </div>
+          <div class="filter-group">
+            <label>النوع</label>
+            <select id="filter-type">
+              <option value="all">الكل</option>
+              <option value="income">دخل</option>
+              <option value="expense">مصروف</option>
+            </select>
+          </div>
+        </div>
+      </section>
+      
+      <section class="table-section">
+        <table class="transactions-table">
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>النوع</th>
+              <th>الحساب</th>
+              <th>الفئة</th>
+              <th>المبلغ</th>
+              <th>ملاحظة</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="transactions-table"></tbody>
+        </table>
+        <div id="empty-state" class="empty-state hidden">لا توجد عمليات مسجلة</div>
+      </section>
+    </main>
+    
+    <footer class="app-footer">
+      <p>مدير فلوسي - مجاني ولوجه الله</p>
+    </footer>
+    
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title"></h3>
+          <button class="modal-close" aria-label="إغلاق">✖</button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

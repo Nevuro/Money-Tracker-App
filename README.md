@@ -1,35 +1,43 @@
-# 💰 مدير فلوسي
+# Money Tracker - Vanilla Version
 
-برنامج بسيط لإدارة الدخل والمصروفات اليومية بطريقة سهلة وسريعة.
-تم عمله **لوجه الله ومجاني بالكامل** لمساعدة أي شخص على تنظيم أمواله ومعرفة أين تذهب مصروفاته.
+Simple HTML/CSS/JS frontend with Python FastAPI backend and SQLite database. No login required.
 
-## ✨ المميزات
+## How to Run
 
-* تسجيل الدخل والمصروفات بسهولة
-* متابعة إجمالي الدخل والمصروف والرصيد الحالي
-* تقسيم العمليات حسب الحساب (محفظة – InstaPay – فيزا)
-* فلترة العمليات حسب الشهر أو الحساب
-* رسم بياني يوضح توزيع المصروفات حسب الفئات
-* حفظ البيانات تلقائيًا على الجهاز باستخدام LocalStorage
+```bash
+cd vanilla/backend
+pip install -r requirements.txt
+python main.py
+```
 
-## 📊 كيفية الاستخدام
+Then open **http://localhost:8000** in your browser. The app loads directly — no login needed.
 
-1. اختر نوع العملية (دخل أو مصروف).
-2. اختر الحساب.
-3. أدخل المبلغ والفئة والتاريخ.
-4. اضغط على **حفظ العملية**.
-5. ستظهر العملية مباشرة في سجل العمليات.
+API docs: **http://localhost:8000/docs**
 
-## 🔒 الخصوصية
+## Features
 
-جميع البيانات يتم حفظها **على جهاز المستخدم فقط** داخل المتصفح، ولا يتم إرسال أي بيانات إلى أي خادم.
+- Add/Edit/Delete transactions (income & expense)
+- Filter by month, account, category, type
+- Charts (expense breakdown + monthly income vs expense)
+- Category management (add custom categories)
+- Budget management with progress bars and alerts
+- Export to JSON/CSV
+- All data stored in SQLite database
 
-## ⚠️ ملاحظة
+## Tech Stack
 
-إذا تم مسح بيانات المتصفح قد يتم حذف البيانات المحفوظة.
+- **Frontend**: Vanilla HTML + CSS + JavaScript + Chart.js
+- **Backend**: Python FastAPI + SQLAlchemy + SQLite
 
-## 🤍 الهدف من المشروع
+## Default Categories
 
-مساعدة الناس على تنظيم أموالهم بطريقة بسيطة ومجانية.
+### Income (دخل)
+- مرتب (Salary), عمل حر (Freelance), استثمار (Investment)
 
-نسأل الله أن يكون هذا العمل نافعًا للجميع.
+### Expense (مصروف)
+- أكل (Food), مواصلات (Transport), تسوق (Shopping), فواتير (Bills), صحة (Health), تعليم (Education), ترفيه (Entertainment), أخرى (Other)
+
+## Notes
+
+- No registration or login required — the app uses a single user
+- Delete the `money_tracker.db` file in `backend/` to reset all data
